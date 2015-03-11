@@ -1,4 +1,4 @@
-Train ticker selling software
+Train ticket selling software
 ==========
 
 How to run
@@ -7,7 +7,7 @@ How to run
 In Eclipse, go to File -> Import -> General -> Existing project into workspace and choose the folder with this project.
 Then run.
 
-Login data
+Login data (in program)
 ==========
 * As admin
 	* <b>Login:</b>  admin
