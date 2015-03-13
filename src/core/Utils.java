@@ -56,6 +56,7 @@ import core.App;
 
 
 
+import entity.RouteName;
 import entity.RouteStop;
 
 import java.io.BufferedReader;
@@ -293,6 +294,8 @@ public class Utils {
 
 	public static ArrayList<String> toArrayRouteStop(RouteStop stop) {
 		ArrayList<String> l = new ArrayList<String>();
+		
+		int pos = 1;
 		
 		l.add("" + (stop.getOrder_id() + 1));
 		//l.add(DBApi.GET.getRouteNameById(stop.getRoute_id()));
@@ -541,6 +544,54 @@ public class Utils {
 		list.setBackground(new Color(255, 255, 255));
 
 		return list;
+	}
+	
+	public static JComboBox getComboHours() {
+		String [] nums = new String[24];
+		for(int i = 0; i < 24; ++i) {
+			nums[i] = String.valueOf(i);
+			if (nums[i].length() < 2) {
+				nums[i] = "0" + nums[i];
+			}
+		}
+		
+		return getDropDown(nums);
+	}
+	
+	public static JComboBox getComboMinutes() {
+		String [] nums = new String[12];
+		for(int i = 0, j = 0; i < 12; ++i, j += 5) {
+			nums[i] = String.valueOf(j);
+			if (nums[i].length() < 2) {
+				nums[i] = "0" + nums[i];
+			}
+		}
+		
+		return getDropDown(nums);
+	}
+	
+	public static JComboBox getComboRoutes() {
+		List<RouteName> routeNames = DBApi.GET.getRouteNames();
+		String [] routes = new String[routeNames.size()];
+		
+		int index = 0;
+		for(RouteName name: routeNames) {
+			routes[index++] = name.getRoute_name();
+		}
+		
+		return getDropDown(routes);
+	}
+	
+	public static RouteName getRouteNameByName(String name) {
+		List<RouteName> routeNames = DBApi.GET.getRouteNames();
+		
+		for (RouteName route: routeNames) {
+			if (route.getRoute_name().equals(name)) {
+				return route;
+			}
+		}
+		
+		return null;
 	}
 
 	public static JComboBox getWhoisList() {

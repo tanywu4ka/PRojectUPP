@@ -18,6 +18,9 @@ import entity.Road;
 import entity.RouteName;
 import entity.RouteStop;
 import entity.StaffMember;
+import entity.Train;
+import entity.TrainStation;
+import entity.Wagon;
 
 public enum DBApi {
 	
@@ -52,6 +55,8 @@ public enum DBApi {
 
 		return staffList;
 	}
+	
+	
 	
 	public StaffMember getStaffMember(String login, String pass) {
 		Query q = em.createQuery("SELECT a FROM StaffMember a WHERE a.staff_login=:arg_login AND a.staff_pass=:arg_pass").setMaxResults(1);
@@ -164,19 +169,66 @@ public enum DBApi {
 		//this is faster then sql query 
 		//as long as connection takes a while and ammount is small
 		
-		String res = null;
+		String res = (String)dbCache.get("route" + id);
 		
-		List<RouteName> routeNames = getRouteNames();
-		for(RouteName name: routeNames) {
-			if (name.getId() == id) {
-				res = name.getRoute_name();
-				break;
+		if (res == null) {
+			List<RouteName> routeNames = getRouteNames();
+			for(RouteName name: routeNames) {
+				if (name.getId() == id) {
+					res = name.getRoute_name();
+					dbCache.put("route" + id, res);
+					break;
+				}
 			}
 		}
+		
+		
 		
 		return res;
 	}
 	
+	
+	public List<Train> getAllTrains() {
+		List<Train> trianList = (List<Train>)dbCache.get("trainList");
+		
+		if (trianList == null) {
+			Query q = em.createQuery("SELECT e FROM Train e ");
+			trianList = q.getResultList();
+			dbCache.put("trainList", trianList);
+		} else {
+			//System.out.println("Showing cached staff list");
+		}
+
+		return trianList;
+	}
+	
+	public int addTrain(boolean [] days, String hours, String mins, int routeId) {
+		int res;
+		em.getTransaction().begin();
+		Train train = new Train(days, hours, mins, routeId);
+		em.persist(train);
+		em.flush();
+		res = train.getId();
+		em.getTransaction().commit();
+		
+		//invalidate name cache
+		dbCache.put("trainList", null);
+		
+		return res;
+	}
+	
+	public void addTrainStaiton(int order, String hour, String min, String cost, int trainId, int cityId) {
+		em.getTransaction().begin();
+		TrainStation station = new TrainStation(order, hour, min, cost, trainId, cityId);
+		em.persist(station);
+		em.getTransaction().commit();
+	}
+	
+	public void addWagon(Wagon w) {
+		em.getTransaction().begin();
+		em.persist(w);
+		em.getTransaction().commit();
+	}
 
 	
 	public void dummy() {
