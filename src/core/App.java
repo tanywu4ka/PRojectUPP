@@ -65,13 +65,13 @@ public enum App {
             	wrapper = new JPanel();
         		wrapper.setPreferredSize(new Dimension(getWidth(), getHeight()));
         		wrapper.setLayout(null);
-        		//final SplashScreen s = new SplashScreen();
-//        		currentPanel = s;
-//        		wrapper.add(s);
+        		final SplashScreen s = new SplashScreen();
+        		currentPanel = s;
+        		wrapper.add(s);
         		
-        		AdminScreen a = new AdminScreen();
-        		currentPanel = a;
-        		wrapper.add(a);
+//        		AdminScreen a = new AdminScreen();
+//        		currentPanel = a;
+//        		wrapper.add(a);
 
             	f = new JFrame("Ticket Kassa");
                 f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,8 +87,8 @@ public enum App {
         			
         			@Override
         			public void run() {
-        				//DBApi.GET.dummy();
-        				//App.GET.setScreen(new LoginScreen());
+        				DBApi.GET.dummy();
+        				App.GET.setScreen(new LoginScreen());
         			}
         		});
             }
